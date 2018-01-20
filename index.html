@@ -45,7 +45,7 @@
 	  </section>
 	</section>
 	
-<section>	
+
 <section>	
   <h3>Where do we get assets and parameters?</h3>
   <p align="left">In the original paper, it is assumed we simply know the set of assets, and their expected returns and covariances.  However to actuallly implement the portfolio we'll have to determine each of these.</p>  
@@ -75,12 +75,35 @@
 </section>
 <section>
   <h3>Estimating Parameters</h3>
+  <p align="left">To create our portfolios, we'll need to know (1) the expected return on each asset, and (2) the covariances between all assets.  The theory simply assumes we know these parameters.</p>
+  <ul>
+    <li>Using historical data to estimate the parameters is problematic because of estimation error.</li>
+    <li>So you are free to use your own forecast---though your variance-covariance matrix must be positive-definite.</li>
+  </ul>
+</section>
+<section>
+  <h3>Sensitivity Analysis</h3>
+  <p align="left">To get an idea how your portfolio weights may change given a change in the underlying parameters, try changing them and recalculating your optimal portfolio weights.</p>
+  <ul>
+    <li>Change the parameters by what you think a reasonable error would be.</li>
+  </ul>
 </section>
 
 <section>
-  <h3>Sensitivity Analysis</h3>
+  <h3>Code to Get Return Data</h3>
+  <pre><code data-trim>
+if("quantmod" %in% rownames(installed.packages()) == FALSE) {
+install.packages("quantmod")
+}
+env <- new.env()
+Symbols <- c('ECA', 'DDD', 'MO', 'RHT')
+getSymbols(Symbols = Symbols, env = env, from = '2015-02-24')
+args <- eapply(env = env, FUN = function(x){x[,6]})[Symbols]
+prices <- na.omit(do.call(what = merge, args = args))
+colnames(prices) <- Symbols
+write.csv(prices, file = "prices.csv")
+  </code></pre>
 </section>
-</section>	
 
   <section>
     <h3>Matt Brigida</h3>
